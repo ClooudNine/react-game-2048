@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {cloneState} from "./utils";
 
 export const moveCells = (row) => {
     let numbers = row.filter(item => item > 0);
@@ -52,3 +53,23 @@ export const moveDown = (state, size) => _
     .flatten()
     .reverse()
     .value();
+
+export const getEmptyCellIndexes = (state) => {
+    const result = [];
+    state.forEach((item, index) => {
+        if (item === 0) {
+            result.push(index);
+        }
+    });
+    return result;
+}
+
+export const randomNumbers = [2, 2, 2, 2, 4];
+
+export const addNewNumber = (state) => {
+    const emptyCellIndexes = getEmptyCellIndexes(state);
+    const randomEmptyCellIndex = _.sample(emptyCellIndexes);
+    let result = cloneState(state);
+    result[randomEmptyCellIndex] = _.sample(randomNumbers);
+    return result;
+}
