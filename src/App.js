@@ -1,6 +1,6 @@
 import React, {useCallback, useState, useEffect} from 'react';
 import './App.css';
-import {addNewNumber, moveDown, moveLeft, moveRight, moveUp} from "./logic";
+import {addNewNumber, moveDown, moveLeft, moveRight, moveUp, getIsGameOver} from "./logic";
 
 const cellSize = 100;
 
@@ -25,39 +25,15 @@ const getInitialState = (size) => {
 function Game(props) {
     const {size} = props;
     const [state, setState] = useState(getInitialState(size));
-
-    const onLeft = useCallback(
-        () => {
-            let newState = moveLeft(state, size);
+    const [isGameOver, setIsGameOver] = useState(false);
+    const onMove = useCallback(
+        (transformer) => {
+            let newState = transformer(state, size);
             newState = addNewNumber(newState);
             setState(newState);
-        },
-        [size, state],
-    );
-
-    const onRight = useCallback(
-        () => {
-            let newState = moveRight(state, size);
-            newState = addNewNumber(newState);
-            setState(newState);
-        },
-        [size, state],
-    );
-
-    const onUp = useCallback(
-        () => {
-            let newState = moveUp(state, size);
-            newState = addNewNumber(newState);
-            setState(newState);
-        },
-        [size, state],
-    );
-
-    const onDown = useCallback(
-        () => {
-            let newState = moveDown(state, size);
-            newState = addNewNumber(newState);
-            setState(newState);
+            if (getIsGameOver(state, size)) {
+                setIsGameOver(true);
+            }
         },
         [size, state],
     );
@@ -73,8 +49,24 @@ function Game(props) {
     }, [onDown, onLeft, onRight, onUp]);
 
     useEffect(() => {
-        window.addEventListener("keydown", keydownListener, true);
-        return () => window.removeEventListener("keydown", keydownListener, true);}, [keydownListener]);
+        window.addEventListener("keydown", onKeyDown, true);
+        return () => window.removeEventListener("keydown", onKeyDown, true);}, [onKeyDown]);
+
+    const onReset = useCallback(
+        () => {
+            setState(getInitialState(size));
+            setIsGameOver(false);
+        },
+        [size]
+    );
+
+    if (isGameOver) {
+        return (
+            <div>
+                <h3>Игра окончена!</h3>
+                <button onClick={onReset}>Начать новую игру</button>
+            </div>
+    )}
 
     return (
         <div>

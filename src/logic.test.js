@@ -1,4 +1,4 @@
-import {moveCells, moveLeft, moveRight, moveUp, moveDown} from "./logic";
+import {moveCells, moveLeft, moveRight, moveUp, moveDown, getIsGameOver} from "./logic";
 
 describe("test movement", () => {
     it("движение 1", () => {
@@ -148,7 +148,7 @@ describe("move to up", () => {
     })
 })
 
- describe("move to down", () => {
+describe("move to down", () => {
     it ("case 1", () => {
         const before = [
             2, 0, 0, 2,
@@ -180,3 +180,34 @@ describe("move to up", () => {
         expect(moveDown(before, 4)).toEqual(after)
     })
 })
+
+describe("game over check", () => {
+    it ("case 1", () => {
+        const before = [
+            2, 32, 8, 2,
+            4, 64, 16, 4,
+            8, 32, 8, 32,
+            16, 4, 2, 16
+        ];
+        expect(getIsGameOver(before, 4)).toEqual(true)
+    })
+    it ("case 2", () => {
+        const before = [
+            64, 2, 4, 2,
+            32, 8, 16, 4,
+            2, 16, 8, 16,
+            8, 4, 64, 0
+        ];
+        expect(getIsGameOver(before, 4)).toEqual(false)
+    })
+    it ("case 3", () => {
+        const before = [
+            4, 2, 64, 8,
+            32, 128, 32, 16,
+            2, 128, 2, 4,
+            4, 64, 8, 16
+        ];
+        expect(getIsGameOver(before, 4)).toEqual(false)
+    })
+})
+

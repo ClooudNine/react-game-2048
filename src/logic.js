@@ -19,14 +19,14 @@ export const moveCells = (row) => {
 }
 
 export const moveLeft = (state, size) => _
-    .chain(state)
+    .chain(cloneState(state))
     .chunk(size)
     .map((row => moveCells(row)))
     .flatten()
     .value();
 
 export const moveRight = (state, size) => _
-    .chain(state)
+    .chain(cloneState(state))
     .reverse()
     .chunk(size)
     .map((row => moveCells(row)))
@@ -35,7 +35,7 @@ export const moveRight = (state, size) => _
     .value();
 
 export const moveUp = (state, size) => _
-    .chain(state)
+    .chain(cloneState(state))
     .chunk(size)
     .unzip()
     .map((row => moveCells(row)))
@@ -44,7 +44,7 @@ export const moveUp = (state, size) => _
     .value();
 
 export const moveDown = (state, size) => _
-    .chain(state)
+    .chain(cloneState(state))
     .reverse()
     .chunk(size)
     .unzip()
@@ -72,4 +72,11 @@ export const addNewNumber = (state) => {
     let result = cloneState(state);
     result[randomEmptyCellIndex] = _.sample(randomNumbers);
     return result;
-}
+};
+
+
+export const getIsGameOver = (state, size) => {
+    if (state.includes(0)) {
+        return false
+    } else return ([moveLeft, moveRight, moveUp, moveDown].every((func) => _.isEqual(func(state, size), state)));
+};
