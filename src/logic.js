@@ -52,4 +52,3 @@ export const moveDown = (state, size) => _
     .flatten()
     .reverse()
     .value();
-

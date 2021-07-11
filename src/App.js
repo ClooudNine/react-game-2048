@@ -11,7 +11,7 @@ function App() {
 }
 
 const Field = ({size, children}) => <div style={{display: "flex", width: size * cellSize, height: size * cellSize, flexWrap: "wrap"}}>{children}</div>
-const Cell = ({children}) => <div style={{width: cellSize, height: cellSize, fontSize:24, textAlign: "center", lineHeight: `${cellSize}px`}}>{children}</div>
+const Cell = ({children}) => <div style={{width: cellSize, height: cellSize, fontSize: 24, textAlign: "center", lineHeight: `${cellSize}px`}}>{children}</div>
 
 let randomNumbers = [2, 2, 2, 2, 4];
 
@@ -34,60 +34,60 @@ const addNewNumber = (state) => {
 }
 
 const getInitialState = (size) => {
-    let result = [];
+    let state = [];
     for (let i = 0; i < size * size; i++) {
-        result.push(0);
+        state.push(0);
     }
-    result = addNewNumber(result);
-    result = addNewNumber(result);
+    state = addNewNumber(state);
+    state = addNewNumber(state);
 
-    return result
+    return state
 }
 
 function Game(props) {
     const {size} = props;
     const [state, setState] = useState(getInitialState(size));
-    const left = useCallback(
+    const onLeft = useCallback(
         () => {
-            let newstate = moveLeft(state, size)
-            setState(newstate);
+            let newState = moveLeft(state, size);
+            newState = addNewNumber(newState);
+            setState(newState);
         },
-        
-        [state],
+        [size, state],
     );
-    const right = useCallback(
+    const onRight = useCallback(
         () => {
-            let newstate = moveRight(state, size)
-            setState(newstate);
+            let newState = moveRight(state, size);
+            newState = addNewNumber(newState);
+            setState(newState);
         },
-
-        [state],
+        [size, state],
     );
-    const up = useCallback(
+    const onUp = useCallback(
         () => {
-            let newstate = moveUp(state, size)
-            setState(newstate);
+            let newState = moveUp(state, size);
+            newState = addNewNumber(newState);
+            setState(newState);
         },
-
-        [state],
+        [size, state],
     );
-    const down = useCallback(
+    const onDown = useCallback(
         () => {
-            let newstate = moveDown(state, size)
-            setState(newstate);
+            let newState = moveDown(state, size);
+            newState = addNewNumber(newState);
+            setState(newState);
         },
-
-        [state],
+        [size, state],
     );
     return (
         <div>
             <Field size={size}>
                 {state.map(item => <Cell>{item}</Cell>)}
             </Field>
-            <button onClick={left}>Влево</button>
-            <button onClick={right}>Вправо</button>
-            <button onClick={up}>Вверх</button>
-            <button onClick={down}>Вниз</button>
+            <button onClick={onLeft}>Влево</button>
+            <button onClick={onRight}>Вправо</button>
+            <button onClick={onUp}>Вверх</button>
+            <button onClick={onDown}>Вниз</button>
         </div>
     );
 }
