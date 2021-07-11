@@ -38,15 +38,15 @@ function Game(props) {
         [size, state],
     );
 
-    const keydownListener = useCallback((e) => {
+    const onKeyDown = useCallback((e) => {
         switch (e.key) {
-            case "ArrowDown": onDown(); break;
-            case "ArrowUp": onUp(); break;
-            case "ArrowLeft": onLeft(); break;
-            case "ArrowRight": onRight(); break;
+            case "ArrowDown": onMove(moveDown); break;
+            case "ArrowUp": onMove(moveUp); break;
+            case "ArrowLeft": onMove(moveLeft); break;
+            case "ArrowRight": onMove(moveRight); break;
             default: break;
         }
-    }, [onDown, onLeft, onRight, onUp]);
+    }, [onMove]);
 
     useEffect(() => {
         window.addEventListener("keydown", onKeyDown, true);
@@ -71,12 +71,12 @@ function Game(props) {
     return (
         <div>
             <Field size={size}>
-                {state.map(item => <Cell>{item}</Cell>)}
+                {state.map((item, index) => <Cell key={index}>{item}</Cell>)}
             </Field>
-            <button onClick={onLeft}>Влево</button>
-            <button onClick={onRight}>Вправо</button>
-            <button onClick={onUp}>Вверх</button>
-            <button onClick={onDown}>Вниз</button>
+            {/*<button onClick={onMove}>Влево</button>*/}
+            {/*<button onClick={onRight}>Вправо</button>*/}
+            {/*<button onClick={onUp}>Вверх</button>*/}
+            {/*<button onClick={onDown}>Вниз</button>*/}
         </div>
     );
 }
