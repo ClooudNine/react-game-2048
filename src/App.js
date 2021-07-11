@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import './App.css';
 import {addNewNumber, moveDown, moveLeft, moveRight, moveUp} from "./logic";
 
@@ -25,6 +25,7 @@ const getInitialState = (size) => {
 function Game(props) {
     const {size} = props;
     const [state, setState] = useState(getInitialState(size));
+
     const onLeft = useCallback(
         () => {
             let newState = moveLeft(state, size);
@@ -33,6 +34,7 @@ function Game(props) {
         },
         [size, state],
     );
+
     const onRight = useCallback(
         () => {
             let newState = moveRight(state, size);
@@ -41,6 +43,7 @@ function Game(props) {
         },
         [size, state],
     );
+
     const onUp = useCallback(
         () => {
             let newState = moveUp(state, size);
@@ -49,6 +52,7 @@ function Game(props) {
         },
         [size, state],
     );
+
     const onDown = useCallback(
         () => {
             let newState = moveDown(state, size);
@@ -57,6 +61,21 @@ function Game(props) {
         },
         [size, state],
     );
+
+    const keydownListener = useCallback((e) => {
+        switch (e.key) {
+            case "ArrowDown": onDown(); break;
+            case "ArrowUp": onUp(); break;
+            case "ArrowLeft": onLeft(); break;
+            case "ArrowRight": onRight(); break;
+            default: break;
+        }
+    }, [onDown, onLeft, onRight, onUp]);
+
+    useEffect(() => {
+        window.addEventListener("keydown", keydownListener, true);
+        return () => window.removeEventListener("keydown", keydownListener, true);}, [keydownListener]);
+
     return (
         <div>
             <Field size={size}>
