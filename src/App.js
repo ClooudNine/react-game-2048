@@ -148,10 +148,6 @@ function Game(props) {
             <Field size={size}>
                 {state.map((value, index) => <Cell key={index} value={value} />)}
             </Field>
-            {/*<button onClick={onMove}>Влево</button>*/}
-            {/*<button onClick={onRight}>Вправо</button>*/}
-            {/*<button onClick={onUp}>Вверх</button>*/}
-            {/*<button onClick={onDown}>Вниз</button>*/}
         </div>
     );
 }
