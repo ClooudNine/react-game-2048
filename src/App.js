@@ -18,6 +18,7 @@ const Field = ({size, children}) => (
             gridTemplateRows: `repeat(${size}, ${cellSize}px)`,
             gridGap: 8,
             padding: 8,
+            position: "relative"
         }}>
         {children}
     </div>
@@ -138,13 +139,28 @@ function Game(props) {
     if (isGameOver) {
         return (
             <div>
-                <h3>Игра окончена!</h3>
-                <button onClick={onReset}>Начать новую игру</button>
+                <div>
+                    <div className="header">
+                        <h1>2048</h1>
+                        <button onClick={onReset}>Новая игра</button>
+                    </div>
+                    <Field size={size}>
+                        {state.map((value, index) => <Cell key={index} value={value} />)}
+                        <div className="endgame">
+                            <h3>Игра окончена!</h3>
+                            <button onClick={onReset}>Начать новую игру</button>
+                        </div>
+                    </Field>
+                </div>
             </div>
     )}
 
     return (
         <div>
+            <div className="header">
+               <h1>2048</h1>
+                <button onClick={onReset}>Новая игра</button>
+            </div>
             <Field size={size}>
                 {state.map((value, index) => <Cell key={index} value={value} />)}
             </Field>
