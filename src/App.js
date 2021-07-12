@@ -14,7 +14,6 @@ const Field = ({size, children}) => (
             display: "inline-grid",
             background: "#BBADA0",
             borderRadius: 12,
-            margin: 60,
             gridTemplateColumns: `repeat(${size}, ${cellSize}px)`,
             gridTemplateRows: `repeat(${size}, ${cellSize}px)`,
             gridGap: 8,
