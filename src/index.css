@@ -21,3 +21,29 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+:root {
+  --tx: 100px;
+  --ty: 100px;
+}
+
+@keyframes move {
+  from {
+    transform: translate(var(--tx), var(--ty));
+  }
+
+  to {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes drop {
+  from {
+    transform: scale(1.2);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}

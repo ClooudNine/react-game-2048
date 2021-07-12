@@ -1,6 +1,6 @@
 import React, {useCallback, useState, useEffect} from 'react';
 import './App.css';
-import {addNewNumber, moveDown, moveLeft, moveRight, moveUp, getIsGameOver} from "./logic";
+import {addNewNumber, moveDown, moveLeft, moveRight, moveUp, getIsGameOver, getId} from "./logic";
 
 const cellSize = 100;
 
@@ -70,27 +70,35 @@ const valueToFontSize = {
     2048: 32,
 }
 
-const Cell = ({value}) => (
+const Cell = ({value, prevPos, lastMove}) => {
+  return (
     <div
-        style={{
-            width: cellSize,
-            height: cellSize,
-            fontSize: valueToFontSize[value],
-            fontWeight: 800,
-            backgroundColor: valueToColor[value],
-            color: valueToTextColor[value],
-            lineHeight: `${cellSize}px`,
-            textAlign: "center",
-            borderRadius: 8,
-        }}>
-        {value > 0 ? value : null}
+      style={{
+        width: cellSize,
+        height: cellSize,
+        fontSize: valueToFontSize[value],
+        fontWeight: 800,
+        backgroundColor: valueToColor[value],
+        color: valueToTextColor[value],
+        lineHeight: `${cellSize}px`,
+        textAlign: "center",
+        borderRadius: 8,
+        transform: "translate(0, 0)",
+        position: "relative",
+        zIndex: prevPos ? "10" : "0",
+        animation: value > 0 ? prevPos ? `0.2s ease-in 1 move` : `0.2s ease-in 1s 1 drop` : "none",
+        "--ty": ["up", "down"].includes(lastMove) ? `${lastMove === "down" ? "-" : ""}${prevPos * cellSize}px` : "0px",
+        "--tx": ["left", "right"].includes(lastMove) ? `${lastMove === "right" ? "-" : ""}${prevPos * cellSize}px` : "0px",
+      }}>
+      {value > 0 ? value : null}
     </div>
-);
+  );
+};
 
 const getInitialState = (size) => {
     let state = [];
     for (let i = 0; i < size * size; i++) {
-        state.push(0);
+        state.push({value: 0, prevPos: null, id: getId()});
     }
     state = addNewNumber(state);
     state = addNewNumber(state);
@@ -98,12 +106,25 @@ const getInitialState = (size) => {
     return state
 }
 
+const moveToTransformer = {
+  up: moveUp,
+  down: moveDown,
+  left: moveLeft,
+  right: moveRight,
+}
+
 function Game(props) {
     const {size} = props;
     const [state, setState] = useState(getInitialState(size));
+    const [lastMove, setLastMove] = useState(null);
+
+    console.log({state});
+
     const [isGameOver, setIsGameOver] = useState(false);
     const onMove = useCallback(
-        (transformer) => {
+        (move) => {
+            const transformer = moveToTransformer[move];
+            setLastMove(move);
             let newState = transformer(state, size);
             newState = addNewNumber(newState);
             setState(newState);
@@ -116,10 +137,10 @@ function Game(props) {
 
     const onKeyDown = useCallback((e) => {
         switch (e.key) {
-            case "ArrowDown": onMove(moveDown); break;
-            case "ArrowUp": onMove(moveUp); break;
-            case "ArrowLeft": onMove(moveLeft); break;
-            case "ArrowRight": onMove(moveRight); break;
+            case "ArrowDown": onMove("down"); break;
+            case "ArrowUp": onMove("up"); break;
+            case "ArrowLeft": onMove("left"); break;
+            case "ArrowRight": onMove("right"); break;
             default: break;
         }
     }, [onMove]);
@@ -162,7 +183,7 @@ function Game(props) {
                 <button onClick={onReset}>Новая игра</button>
             </div>
             <Field size={size}>
-                {state.map((value, index) => <Cell key={index} value={value} />)}
+                {state.map((item) => <Cell key={item.id} value={item.value} prevPos={item.prevPos} lastMove={lastMove} />)}
             </Field>
         </div>
     );

@@ -2,18 +2,20 @@ import _ from 'lodash';
 import {cloneState} from "./utils";
 
 export const moveCells = (row) => {
-    let numbers = row.filter(item => item > 0);
+    const rowWithPositions = row.map(({value}, index) => ({value, prevPos: index}));
+
+    let numbers = rowWithPositions.filter(item => item.value > 0);
     let result = [];
     numbers.forEach(function (item, index) {
-        if (item === numbers[index + 1]) {
-            result.push(item + numbers[index + 1]);
+        if (numbers[index + 1] && item.value === numbers[index + 1].value) {
+            result.push({value: item.value * 2, prevPos: null, id: getId()});
             numbers.splice(index, 1);
         } else {
             result.push(item)
         }
     })
     for (let i = result.length; i < row.length; i++) {
-        result.push(0);
+        result.push({value: 0, prevPos: null});
     }
     return result;
 }
@@ -57,12 +59,14 @@ export const moveDown = (state, size) => _
 export const getEmptyCellIndexes = (state) => {
     const result = [];
     state.forEach((item, index) => {
-        if (item === 0) {
+        if (item.value === 0) {
             result.push(index);
         }
     });
     return result;
 }
+
+export const getId = () => '_' + Math.random().toString(36).substr(2, 9);
 
 const probabilities = [
     {number: 2, probability: 9},
@@ -77,13 +81,14 @@ export const addNewNumber = (state) => {
     const emptyCellIndexes = getEmptyCellIndexes(state);
     const randomEmptyCellIndex = _.sample(emptyCellIndexes);
     let result = cloneState(state);
-    result[randomEmptyCellIndex] = _.sample(randomNumbers);
+    result[randomEmptyCellIndex] = {value: _.sample(randomNumbers), prevPos: null, id: getId()}
     return result;
 };
 
-
 export const getIsGameOver = (state, size) => {
-    if (state.includes(0)) {
+    if (state.some((item) => item.value === 0)) {
         return false
-    } else return ([moveLeft, moveRight, moveUp, moveDown].every((func) => _.isEqual(func(state, size), state)));
+    } else {
+        return ([moveLeft, moveRight, moveUp, moveDown].every((func) => _.isEqual(func(state, size), state)));
+    }
 };
