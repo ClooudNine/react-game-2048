@@ -64,7 +64,14 @@ export const getEmptyCellIndexes = (state) => {
     return result;
 }
 
-export const randomNumbers = [2, 2, 2, 2, 2, 2, 2, 2, 2, 4];
+const probabilities = [
+    {number: 2, probability: 9},
+    {number: 4, probability: 1},
+]
+
+export const randomNumbers = probabilities.reduce((acc, {number, probability}) => {
+    return [...acc, ...new Array(probability).fill(number)]
+}, []);
 
 export const addNewNumber = (state) => {
     const emptyCellIndexes = getEmptyCellIndexes(state);
