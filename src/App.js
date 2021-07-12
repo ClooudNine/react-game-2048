@@ -55,18 +55,18 @@ const valueToTextColor = {
 }
 
 const valueToFontSize = {
-    0: 24,
-    2: 24,
-    4: 24,
-    8: 24,
-    16: 24,
-    32: 24,
-    64: 24,
-    128: 20,
-    256: 20,
-    512: 20,
-    1024: 16,
-    2048: 16,
+    0: 44,
+    2: 44,
+    4: 44,
+    8: 44,
+    16: 44,
+    32: 44,
+    64: 44,
+    128: 38,
+    256: 38,
+    512: 38,
+    1024: 32,
+    2048: 32,
 }
 
 const Cell = ({value}) => (
@@ -75,15 +75,16 @@ const Cell = ({value}) => (
             width: cellSize,
             height: cellSize,
             fontSize: valueToFontSize[value],
+            fontWeight: 800,
             backgroundColor: valueToColor[value],
             color: valueToTextColor[value],
             lineHeight: `${cellSize}px`,
             textAlign: "center",
             borderRadius: 8,
         }}>
-            {value > 0 ? value : null}
-        </div>
-    );
+        {value > 0 ? value : null}
+    </div>
+);
 
 const getInitialState = (size) => {
     let state = [];
