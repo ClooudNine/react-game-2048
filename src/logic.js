@@ -89,6 +89,9 @@ export const getIsGameOver = (state, size) => {
     if (state.some((item) => item.value === 0)) {
         return false
     } else {
-        return ([moveLeft, moveRight, moveUp, moveDown].every((func) => _.isEqual(func(state, size), state)));
+        return ([moveLeft, moveRight, moveUp, moveDown].every((func) => {
+            const newState = func(state, size);
+            return _.isEqualWith(newState, state, ({value}) => value);
+        }));
     }
 };
