@@ -64,7 +64,7 @@ export const getEmptyCellIndexes = (state) => {
     return result;
 }
 
-export const randomNumbers = [2, 2, 2, 2, 4];
+export const randomNumbers = [2, 2, 2, 2, 2, 2, 2, 2, 2, 4];
 
 export const addNewNumber = (state) => {
     const emptyCellIndexes = getEmptyCellIndexes(state);

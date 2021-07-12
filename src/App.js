@@ -8,8 +8,83 @@ function App() {
     return <Game size={4} />
 }
 
-const Field = ({size, children}) => <div style={{display: "flex", width: size * cellSize, height: size * cellSize, flexWrap: "wrap"}}>{children}</div>
-const Cell = ({children}) => <div style={{width: cellSize, height: cellSize, fontSize: 24, textAlign: "center", lineHeight: `${cellSize}px`}}>{children}</div>
+const Field = ({size, children}) => (
+    <div
+        style={{
+            display: "inline-grid",
+            background: "#BBADA0",
+            borderRadius: 12,
+            margin: 60,
+            gridTemplateColumns: `repeat(${size}, ${cellSize}px)`,
+            gridTemplateRows: `repeat(${size}, ${cellSize}px)`,
+            gridGap: 8,
+            padding: 8,
+        }}>
+        {children}
+    </div>
+)
+
+
+const valueToColor = {
+    0: "#CDC1B4",
+    2: "#EEE4DA",
+    4: "#EDE0C8",
+    8: "#F2B179",
+    16: "#F59563",
+    32: "#F67C5F",
+    64: "#F65E3B",
+    128: "#EDCF72",
+    256: "#EDCC61",
+    512: "#EBC850",
+    1024: "#EEC63F",
+    2048: "#EFC32E",
+}
+
+const valueToTextColor = {
+    0: "#776E65",
+    2: "#776E65",
+    4: "#776E65",
+    8: "#F9F6F2",
+    16: "#F9F6F2",
+    32: "#F9F6F2",
+    64: "#F9F6F2",
+    128: "#F9F6F2",
+    256: "#F9F6F2",
+    512: "#F9F6F2",
+    1024: "#F9F6F2",
+    2048: "#F9F6F2",
+}
+
+const valueToFontSize = {
+    0: 24,
+    2: 24,
+    4: 24,
+    8: 24,
+    16: 24,
+    32: 24,
+    64: 24,
+    128: 20,
+    256: 20,
+    512: 20,
+    1024: 16,
+    2048: 16,
+}
+
+const Cell = ({value}) => (
+    <div
+        style={{
+            width: cellSize,
+            height: cellSize,
+            fontSize: valueToFontSize[value],
+            backgroundColor: valueToColor[value],
+            color: valueToTextColor[value],
+            lineHeight: `${cellSize}px`,
+            textAlign: "center",
+            borderRadius: 8,
+        }}>
+            {value > 0 ? value : null}
+        </div>
+    );
 
 const getInitialState = (size) => {
     let state = [];
@@ -71,7 +146,7 @@ function Game(props) {
     return (
         <div>
             <Field size={size}>
-                {state.map((item, index) => <Cell key={index}>{item}</Cell>)}
+                {state.map((value, index) => <Cell key={index} value={value} />)}
             </Field>
             {/*<button onClick={onMove}>Влево</button>*/}
             {/*<button onClick={onRight}>Вправо</button>*/}
