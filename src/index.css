@@ -31,19 +31,23 @@ code {
 @keyframes move {
   from {
     transform: translate(var(--tx), var(--ty));
+    opacity: 1;
   }
 
   to {
     transform: translate(0, 0);
+    opacity: 1;
   }
 }
 
 @keyframes drop {
   from {
     transform: scale(1.2);
+    opacity: 0;
   }
 
   to {
     transform: scale(1);
+    opacity: 1;
   }
 }

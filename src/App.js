@@ -70,7 +70,7 @@ const valueToFontSize = {
     2048: 32,
 }
 
-const Cell = ({value, prevPos, lastMove}) => {
+const Cell = ({value, prevPos, curPos, lastMove}) => {
   return (
     <div
       style={{
@@ -86,9 +86,10 @@ const Cell = ({value, prevPos, lastMove}) => {
         transform: "translate(0, 0)",
         position: "relative",
         zIndex: prevPos ? "10" : "0",
-        animation: value > 0 ? prevPos ? `0.2s ease-in 1 move` : `0.2s ease-in 1s 1 drop` : "none",
-        "--ty": ["up", "down"].includes(lastMove) ? `${lastMove === "down" ? "-" : ""}${prevPos * cellSize}px` : "0px",
-        "--tx": ["left", "right"].includes(lastMove) ? `${lastMove === "right" ? "-" : ""}${prevPos * cellSize}px` : "0px",
+        opacity: value > 0 ? prevPos !== null ? 1 : 0 : 1,
+        animation: value > 0 ? prevPos !== null ? `0.1s ease-in 1 forwards move` : `0.1s ease-in 0.1s 1 forwards drop` : "none",
+        "--ty": ["up", "down"].includes(lastMove) ? `${lastMove === "down" ? "-" : ""}${(prevPos - curPos) * cellSize}px` : "0px",
+        "--tx": ["left", "right"].includes(lastMove) ? `${lastMove === "right" ? "-" : ""}${(prevPos - curPos) * cellSize}px` : "0px",
       }}>
       {value > 0 ? value : null}
     </div>
@@ -111,6 +112,16 @@ const moveToTransformer = {
   down: moveDown,
   left: moveLeft,
   right: moveRight,
+}
+
+export const getCurrentPosition = ({lastMove, index, size}) => {
+  switch (lastMove) {
+    case "left": return index % size;
+    case "right": return size - 1 - (index % size);
+    case "up": return Math.floor(index / size);
+    case "down": return size - 1 - Math.floor(index / size);
+    default: return 0;
+  }
 }
 
 function Game(props) {
@@ -183,7 +194,7 @@ function Game(props) {
                 <button onClick={onReset}>Новая игра</button>
             </div>
             <Field size={size}>
-                {state.map((item) => <Cell key={item.id} value={item.value} prevPos={item.prevPos} lastMove={lastMove} />)}
+                {state.map((item, index) => <Cell key={item.id} value={item.value} prevPos={item.prevPos} lastMove={lastMove} curPos={getCurrentPosition({lastMove, index, size})} />)}
             </Field>
         </div>
     );

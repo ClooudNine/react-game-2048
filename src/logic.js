@@ -8,7 +8,7 @@ export const moveCells = (row) => {
     let result = [];
     numbers.forEach(function (item, index) {
         if (numbers[index + 1] && item.value === numbers[index + 1].value) {
-            result.push({value: item.value * 2, prevPos: null, id: getId()});
+            result.push({value: item.value * 2, prevPos: numbers[index + 1].prevPos, id: getId()});
             numbers.splice(index, 1);
         } else {
             result.push(item)

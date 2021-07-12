@@ -1,4 +1,5 @@
 import {moveCells, moveLeft, moveRight, moveUp, moveDown, getIsGameOver} from "./logic";
+import {getCurrentPosition} from "./App";
 
 describe("test movement", () => {
     it("движение 1", () => {
@@ -211,3 +212,37 @@ describe("game over check", () => {
     })
 })
 
+describe("get curren position", () => {
+    const size = 4;
+    it ("left", () => {
+        const lastMove = "left";
+        expect(getCurrentPosition({lastMove, size, index: 0})).toEqual(0);
+        expect(getCurrentPosition({lastMove, size, index: 5})).toEqual(1);
+        expect(getCurrentPosition({lastMove, size, index: 10})).toEqual(2);
+        expect(getCurrentPosition({lastMove, size, index: 15})).toEqual(3);
+    })
+
+    it ("right", () => {
+        const lastMove = "right";
+        expect(getCurrentPosition({lastMove, size, index: 0})).toEqual(3);
+        expect(getCurrentPosition({lastMove, size, index: 5})).toEqual(2);
+        expect(getCurrentPosition({lastMove, size, index: 10})).toEqual(1);
+        expect(getCurrentPosition({lastMove, size, index: 15})).toEqual(0);
+    })
+
+    it ("up", () => {
+        const lastMove = "up";
+        expect(getCurrentPosition({lastMove, size, index: 0})).toEqual(0);
+        expect(getCurrentPosition({lastMove, size, index: 5})).toEqual(1);
+        expect(getCurrentPosition({lastMove, size, index: 10})).toEqual(2);
+        expect(getCurrentPosition({lastMove, size, index: 15})).toEqual(3);
+    })
+
+    it ("down", () => {
+        const lastMove = "down";
+        expect(getCurrentPosition({lastMove, size, index: 0})).toEqual(3);
+        expect(getCurrentPosition({lastMove, size, index: 5})).toEqual(2);
+        expect(getCurrentPosition({lastMove, size, index: 10})).toEqual(1);
+        expect(getCurrentPosition({lastMove, size, index: 15})).toEqual(0);
+    })
+})
