@@ -8,7 +8,7 @@ export const moveCells = (row) => {
     let result = [];
     numbers.forEach(function (item, index) {
         if (numbers[index + 1] && item.value === numbers[index + 1].value) {
-            result.push({value: item.value * 2, prevPos: numbers[index + 1].prevPos, id: getId()});
+            result.push({value: item.value * 2, prevPos: null, id: getId()});
             numbers.splice(index, 1);
         } else {
             result.push(item)
@@ -89,9 +89,6 @@ export const getIsGameOver = (state, size) => {
     if (state.some((item) => item.value === 0)) {
         return false
     } else {
-        return ([moveLeft, moveRight, moveUp, moveDown].every((func) => {
-            const newState = func(state, size);
-            return _.isEqualWith(newState, state, ({value}) => value);
-        }));
+        return ([moveLeft, moveRight, moveUp, moveDown].every((func) => _.isEqual(func(state, size), state)));
     }
 };

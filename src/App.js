@@ -1,6 +1,8 @@
 import React, {useCallback, useState, useEffect} from 'react';
 import './App.css';
 import {addNewNumber, moveDown, moveLeft, moveRight, moveUp, getIsGameOver, getId} from "./logic";
+import {isArraysEqualWith} from "./utils";
+import _ from 'lodash';
 
 const cellSize = 100;
 
@@ -95,7 +97,9 @@ const Cell = ({value, prevPos, curPos, lastMove}) => {
     </div>
   );
 };
-
+export const customizer = (objArray, objOther) => {
+    return objArray.value === objOther.value
+};
 const getInitialState = (size) => {
     let state = [];
     for (let i = 0; i < size * size; i++) {
@@ -128,23 +132,24 @@ function Game(props) {
     const {size} = props;
     const [state, setState] = useState(getInitialState(size));
     const [lastMove, setLastMove] = useState(null);
-
-    console.log({state});
-
     const [isGameOver, setIsGameOver] = useState(false);
     const onMove = useCallback(
         (move) => {
             const transformer = moveToTransformer[move];
             setLastMove(move);
-            let newState = transformer(state, size);
-            newState = addNewNumber(newState);
-            setState(newState);
-            if (getIsGameOver(state, size)) {
-                setIsGameOver(true);
-            }
+                let newState = transformer(state, size);
+                 if(!isArraysEqualWith(state, newState, customizer)){
+                     newState = addNewNumber(newState);
+                     setState(newState);
+                 } else {
+                     if (getIsGameOver(state, size)) {
+                         setIsGameOver(true);
+                     }
+                 }
         },
         [size, state],
     );
+
 
     const onKeyDown = useCallback((e) => {
         switch (e.key) {
