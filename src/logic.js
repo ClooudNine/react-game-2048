@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import {cloneState} from "./utils";
+import {cloneState, isArraysEqualWith} from "./utils";
+import {customizer} from "./App";
 
 export const moveCells = (row) => {
     const rowWithPositions = row.map(({value}, index) => ({value, prevPos: index}));
@@ -89,6 +90,6 @@ export const getIsGameOver = (state, size) => {
     if (state.some((item) => item.value === 0)) {
         return false
     } else {
-        return ([moveLeft, moveRight, moveUp, moveDown].every((func) => _.isEqual(func(state, size), state)));
+        return ([moveLeft, moveRight, moveUp, moveDown].every((func) => isArraysEqualWith(state, func(state, size), customizer)));
     }
 };
